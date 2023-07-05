@@ -3,13 +3,29 @@ import { UserController } from "./controllers/user";
 import { UserService } from "../business/services/user";
 import { UserRepository } from "../infrastructure/repositories/user";
 
-const userRouter = Router();
+export class Routes {
+  userRepository: UserRepository;
 
-const userRepository = new UserRepository();
-const userService = new UserService(userRepository);
-const userController = new UserController(userService);
+  userService: UserService;
 
-userRouter.get("/", (req, res) => userController.get(req, res));
-userRouter.post("/create", (req, res) => userController.create(req, res));
+  userController: UserController;
 
-export default userRouter;
+  router: Router;
+
+  constructor() {
+    this.router = Router();
+    this.userRepository = new UserRepository();
+    this.userService = new UserService(this.userRepository);
+    this.userController = new UserController(this.userService);
+
+    this.router.get("/", (req, res) => this.userController.get(req, res));
+
+    this.router.post("/create", (req, res) => this.userController.create(req, res));
+  }
+
+  getRoutes(): Router {
+    return this.router;
+  }
+}
+
+export default Routes;
