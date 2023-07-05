@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { CreateUserDTO } from "../../business/DTOs/create-user";
 import { IUserService } from "../../business/services/interfaces/user";
 import { User } from "../../business/entities/user";
+import { UserViewModel } from "../viewmodels/user";
 
 export class UserController {
   private userService: IUserService;
@@ -12,7 +13,9 @@ export class UserController {
 
   async get(req: Request, res: Response) {
     try {
-      const response = await this.userService.getUser();
+      const user = await this.userService.getUser();
+
+      const response = new UserViewModel(user);
 
       res.send(response);
     } catch (error) {
